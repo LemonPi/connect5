@@ -1,0 +1,4 @@
+.idea
+names.json
+node_modules
+client/debug*
