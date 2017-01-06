@@ -148,8 +148,13 @@ function makeJoin(game) {
         game
     });
 }
+
+const allowAI = document.getElementById("allow_ai");
 function makeCreate() {
-    return JSON.stringify({type: "create"});
+    return JSON.stringify({
+        type: "create",
+        ai  : allowAI.checked
+    });
 }
 
 function makeConnect(name) {
@@ -168,8 +173,8 @@ function makeState(game) {
 // game creation and joining buttons
 const gameSelect = document.getElementById("game_select");
 const createButton = document.getElementById("create");
+const createGroup = document.getElementById("create_group");
 const joinButton = document.getElementById("join");
-const connectButton = document.getElementById("connect");
 createButton.addEventListener("click", ()=> {
     socket.send(makeCreate());
 });
@@ -179,6 +184,9 @@ joinButton.addEventListener("click", ()=> {
 gameSelect.addEventListener("change", ()=> {
     socket.send(makeState(Number(gameSelect.value)));
 });
+
+const connectButton = document.getElementById("connect");
+const connectGroup = document.getElementById("connect_group");
 connectButton.addEventListener("click", ()=> {
     const nameInput = document.getElementById("name");
     // name is either given or randomly generated (8 characters long)
@@ -187,6 +195,9 @@ connectButton.addEventListener("click", ()=> {
     // assuming connection is successful
     joinButton.style.visibility = "visible";
     createButton.style.visibility = "visible";
+    createGroup.style.visibility = "visible";
+    connectGroup.style.display = "none";
+    connectButton.style.display = "none";
 });
 
 function updateGameSelection(list) {

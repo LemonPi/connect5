@@ -37,9 +37,16 @@
         </div>
         <select multiple id="game_select">
         </select>
-        <span><input type="text" id="name"><button id="connect">Connect</button></span>
-        <button id="create">Create</button>
-        <button id="join">Join</button>
+        <div id="connect_group">
+            <label>name <input type="text" id="name"></label>
+        </div>
+        <a href="#" id="connect" class="myButton">Connect</a>
+        <fieldset id="create_group">
+            <legend>Creation options</legend>
+            <label><input type="checkbox" id="allow_ai">play against AI</label><br>
+        </fieldset>
+        <a href="#" id="create" class="myButton">Create</a>
+        <a href="#" id="join" class="myButton">Join</a>
         <ul id="player_list"></ul>
     </div>
 </div>

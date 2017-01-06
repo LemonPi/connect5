@@ -26,7 +26,8 @@ module.exports = {
     makeCreate(game) {
         return JSON.stringify({
             type: "create",
-            game
+            ai  : games[game].ai,
+            game,
         });
     },
     makeList() {

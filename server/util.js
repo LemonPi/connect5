@@ -1,8 +1,6 @@
 /**
  * Created by Johnson on 2017-01-05.
  */
-const uid = require("uid");
-
 function has(obj, key) {
     return Object.prototype.hasOwnProperty.call(obj, key);
 }

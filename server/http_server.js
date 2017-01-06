@@ -7,7 +7,9 @@ const {has} = require("./util");
 const {makeCreate, makeList, makeError, makeMove, makeWin, makeJoin} = require("./messages");
 const {handleCreate, handleMove, handleJoin, handleState} = require("./websocket_server");
 
-var mimeTypes = {
+const resourceRoot = "../";
+
+const mimeTypes = {
     "html": "text/html",
     "jpeg": "image/jpeg",
     "jpg" : "image/jpeg",
@@ -84,7 +86,7 @@ function startHTTPServer(port) {
         }
 
         // default to serving static client files if not api
-        const filename = path.join(process.cwd(), clientRouting, action);
+        const filename = path.join(resourceRoot, clientRouting, action);
         fs.stat(filename, function (err, stats) {
             if (err || stats.isFile() === false) {
                 console.log(err);

@@ -19,6 +19,10 @@
     border: 2px solid black;
 }
 
+#side_divisor {
+    text-align: center;
+}
+
 #game_status {
     font-family: Roboto;
 }
@@ -44,17 +48,57 @@
     font-weight: bold;
 }
 
-#create, #join {
+#game_select {
+    height: 100px;
+}
+
+#connect {
+    margin-top: 6px;
+}
+
+#create_group, #join, #create {
     visibility: hidden;
+    margin: 5px 0;
 }
 
 #player_list {
     display: flex;
     flex-direction: column;
-    font-family: roboto;
     list-style-type: none;
 }
 
 #own_name {
     font-weight: bold;
+}
+
+.myButton {
+    background-color: #36c75d;
+    -moz-border-radius: 36px;
+    -webkit-border-radius: 36px;
+    border-radius: 36px;
+    border: 3px solid #427847;
+    display: inline-block;
+    cursor: pointer;
+    color: #ffffff;
+    font-family: Arial;
+    font-size: 14px;
+    padding: 8px 14px;
+    text-decoration: none;
+}
+
+.myButton:hover {
+    background-color: #9fd941;
+}
+
+.myButton:active {
+    position: relative;
+    top: 1px;
+}
+
+html {
+    font-family: roboto;
+}
+
+fieldset {
+    border: none;
 }
