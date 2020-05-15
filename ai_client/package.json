@@ -1,0 +1,24 @@
+{
+  "name": "connect5_ai",
+  "version": "1.0.0",
+  "description": "AI for playing connect 5 (Gomoku) through websockets",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "keywords": [
+    "AI",
+    "minimax",
+    "alpha-beta pruning",
+    "connect5",
+    "Gomoku"
+  ],
+  "author": {
+    "name": "Johnson Zhong",
+    "email": "johnsonzhong@hotmail.ca"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "bbst": "^0.2.1"
+  }
+}

@@ -11,7 +11,7 @@ module.exports = {
     },
     makeMove(validMove, player, location) {
         return JSON.stringify({
-            type: "move",
+            type: "getMove",
             player,
             validMove,
             location
@@ -49,6 +49,13 @@ module.exports = {
         return JSON.stringify({
             type : "state",
             state: game.getState()
+        });
+    },
+    makeBoard(game) {
+        return JSON.stringify({
+            type : "board",
+            turn : game.playerTurn,
+            board: game.board,
         });
     }
 };

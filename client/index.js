@@ -50,6 +50,7 @@ function clearBoard() {
     // grid size in canvas units; square grid
     // clear grid
     ctx.clearRect(0, 0, board.width, board.height);
+    moveCtx.clearRect(0, 0, board.width, board.height);
 
     ctx.save();
     ctx.lineWidth = 1;
@@ -74,7 +75,7 @@ const playerOne = document.getElementById("p1");
 const playerTwo = document.getElementById("p2");
 function updatePlayerTurn(playerTurn) {
     if (playerTurn === 1) {
-        // next to move
+        // next to getMove
         playerOne.className = "active_move";
         playerTwo.className = "";
     } else if (playerTurn === 2) {
@@ -130,7 +131,7 @@ moveIndicator.addEventListener("mousedown", function (e) {
     const coord = getRowCol(x, y);
     console.log(coord);
     socket.send(JSON.stringify({
-        type    : "move",
+        type    : "getMove",
         location: coord,
         game,
         player,
@@ -296,14 +297,14 @@ socket.onmessage = (event) => {
         game = msg.game;
         gridNum = msg.size;
         recalculateGrid(gridNum);
-        return socket.send(makeState(game));
+        break;
     }
     case "state": {
         // get latest state of the game
         updateGameState(msg.state);
         break;
     }
-    case "move": {
+    case "getMove": {
         // display moves from players (including self)
         if (msg.validMove) {
             console.log(`Move made by ${msg.player}`);
