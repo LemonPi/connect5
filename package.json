@@ -1,13 +1,16 @@
 {
-  "name": "connect5_server",
+  "name": "connect5-server",
   "description": "Server for playing connect 5",
   "repository": "https://github.com/LemonPi/connect5",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "license": "ISC",
   "dependencies": {
     "bufferutil": "^4.0.1",
     "uid": "^0.0.2",
     "ws": "^1.1.1"
+  },
+  "scripts": {
+    "start": "node server/index.js"
   },
   "devDependencies": {}
 }
