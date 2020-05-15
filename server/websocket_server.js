@@ -170,6 +170,7 @@ function startWebSocketServer(wsPath, server) {
                 return handleBoard(ws.send.bind(ws), msg);
             }
             default:
+                console.error(`Unrecognized message type ${msg.type}`);
                 break;
             }
         });

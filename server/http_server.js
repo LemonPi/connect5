@@ -17,6 +17,7 @@ const mimeTypes = {
     "js"  : "text/javascript",
     "css" : "text/css",
     "svg" : "image/svg+xml",
+    "json": "application/json",
 };
 
 function handleHTTPAPI(res, action, q) {
@@ -95,6 +96,11 @@ function startHTTPServer(port) {
                 return;
             }
             const mimeType = mimeTypes[path.extname(filename).split(".")[1]];
+
+            if (mimeType === undefined) {
+                throw Error(`undefined mapping for mime type ${path.extname(filename).split(".")[1]}`);
+            }
+
             res.writeHead(200, {'Content-Type': mimeType});
 
             const fileStream = fs.createReadStream(filename);
