@@ -7,7 +7,7 @@ const {has} = require("./util");
 const {makeCreate, makeList, makeError, makeMove, makeWin, makeJoin} = require("./messages");
 const {handleCreate, handleMove, handleJoin, handleState} = require("./websocket_server");
 
-const resourceRoot = "../";
+const resourceRoot = "./";
 
 const mimeTypes = {
     "html": "text/html",
