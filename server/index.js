@@ -15,6 +15,6 @@ fs.readFile("../game.json", "utf-8", (err, data)=> {
 
     // start various servers
     console.log("game configuration retrieved");
-    const server = startHTTPServer(config.port);
+    const server = startHTTPServer(process.env.PORT || config.port);
     startWebSocketServer(config.wsPath, server);
 });
