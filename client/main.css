@@ -57,9 +57,12 @@
 }
 
 #create_group, #join, #create {
-    display:none;
     visibility: hidden;
     margin: 5px 0;
+}
+
+#create_group {
+    display: none;
 }
 
 #player_list {
