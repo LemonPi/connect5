@@ -84,6 +84,7 @@ function updatePlayerTurn(playerTurn) {
     }
 }
 function placePiece(player, {r, c}) {
+    console.log(`placing piece ${player} : ${r}, ${c}`);
     // board piece
     if (player === 2) {
         ctx.fillStyle = "white";
@@ -131,7 +132,7 @@ moveIndicator.addEventListener("mousedown", function (e) {
     const coord = getRowCol(x, y);
     console.log(coord);
     socket.send(JSON.stringify({
-        type    : "getMove",
+        type    : "move",
         location: coord,
         game,
         player,
