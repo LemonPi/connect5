@@ -2,3 +2,6 @@
 names.json
 node_modules
 client/debug*
+npm-debug.log
+.DS_Store
+/*.env
