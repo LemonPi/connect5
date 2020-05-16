@@ -39,6 +39,7 @@ function getRowCol(x, y) {
         c: Math.round(x / gridSize)
     };
 }
+
 function getXY(r, c) {
     return {
         x: (c) * gridSize,
@@ -73,6 +74,7 @@ function clearBoard() {
 // current game information
 const playerOne = document.getElementById("p1");
 const playerTwo = document.getElementById("p2");
+
 function updatePlayerTurn(playerTurn) {
     if (playerTurn === 1) {
         // next to getMove
@@ -83,6 +85,7 @@ function updatePlayerTurn(playerTurn) {
         playerOne.className = "";
     }
 }
+
 function placePiece(player, {r, c}) {
     console.log(`placing piece ${player} : ${r}, ${c}`);
     // board piece
@@ -152,6 +155,7 @@ function makeJoin(game) {
 }
 
 const allowAI = document.getElementById("allow_ai");
+
 function makeCreate() {
     return JSON.stringify({
         type: "create",
@@ -165,10 +169,18 @@ function makeConnect(name) {
         name
     });
 }
+
 function makeState(game) {
     return JSON.stringify({
         type: "state",
         game
+    });
+}
+
+function makeKeepAlive() {
+    return JSON.stringify({
+        type: "keep alive",
+        name
     });
 }
 
@@ -177,23 +189,25 @@ const gameSelect = document.getElementById("game_select");
 const createButton = document.getElementById("create");
 const createGroup = document.getElementById("create_group");
 const joinButton = document.getElementById("join");
-createButton.addEventListener("click", ()=> {
+createButton.addEventListener("click", () => {
     socket.send(makeCreate());
 });
-joinButton.addEventListener("click", ()=> {
+joinButton.addEventListener("click", () => {
     socket.send(makeJoin(Number(gameSelect.value)));
 });
-gameSelect.addEventListener("change", ()=> {
+gameSelect.addEventListener("change", () => {
     socket.send(makeState(Number(gameSelect.value)));
 });
 
 const connectButton = document.getElementById("connect");
 const connectModal = document.getElementById("connection_modal");
-connectButton.addEventListener("click", ()=> {
+connectButton.addEventListener("click", () => {
     const nameInput = document.getElementById("name");
     // name is either given or randomly generated (8 characters long)
     name = nameInput.value || Math.random().toString(35).substr(2, 8);
     socket.send(makeConnect(name));
+    // heroku needs keepalive message at least every 55 seconds
+    setInterval(keepAlive, 30000);
     // assuming connection is successful
     joinButton.style.visibility = "visible";
     createButton.style.visibility = "visible";
@@ -214,11 +228,11 @@ function updateGameSelection(list) {
             alreadyExistIndices.push(j);
         }
     }
-    toRemoveIndices.forEach((i)=> {
+    toRemoveIndices.forEach((i) => {
         gameSelect.remove(i);
     });
     // add new ones
-    list.forEach((gameID, j)=> {
+    list.forEach((gameID, j) => {
         // not already existing
         if (alreadyExistIndices.indexOf(j) < 0) {
             const option = document.createElement("option");
@@ -234,6 +248,7 @@ function updateGameSelection(list) {
 }
 
 const playerList = document.getElementById("player_list");
+
 function updatePlayerList(list) {
     const alreadyExistIndices = [];
     // remove all that's not in the list
@@ -246,7 +261,7 @@ function updatePlayerList(list) {
         }
     }
     // add new ones
-    list.forEach((playerName, j)=> {
+    list.forEach((playerName, j) => {
         // not already existing
         if (alreadyExistIndices.indexOf(j) < 0) {
             const item = document.createElement("li");
@@ -260,6 +275,7 @@ function updatePlayerList(list) {
 }
 
 const gameStatus = document.getElementById("game_status");
+
 function updateGameState(state) {
     playerOne.innerHTML = state.players[0] || "";
     playerTwo.innerHTML = state.players[1] || "";
@@ -267,66 +283,69 @@ function updateGameState(state) {
     gameStatus.innerHTML = state.status;
 }
 
+function keepAlive() {
+    socket.send(makeKeepAlive());
+}
 
 socket.onmessage = (event) => {
     const msg = JSON.parse(event.data);
     console.log("message");
     console.log(msg);
     switch (msg.type) {
-    case "connect": {
-        // somebody connected, update player list
-        return updatePlayerList(msg.names);
-    }
-    case "create": {
-        // creation success
-        console.log("Created game");
-        game = msg.game;
-        // immediately join created game
-        return socket.send(makeJoin(game));
-    }
-    case "list": {
-        // server sent list of games for us to update our selection list
-        console.log("Listing available games");
-        updateGameSelection(msg.list);
-        break;
-    }
-    case "join": {
-        // server sent game connection information (required for future interaction)
-        console.log("Joined game");
-        player = msg.player;
-        game = msg.game;
-        gridNum = msg.size;
-        recalculateGrid(gridNum);
-        break;
-    }
-    case "state": {
-        // get latest state of the game
-        updateGameState(msg.state);
-        break;
-    }
-    case "getMove": {
-        // display moves from players (including self)
-        if (msg.validMove) {
-            console.log(`Move made by ${msg.player}`);
-            placePiece(msg.player, msg.location);
+        case "connect": {
+            // somebody connected, update player list
+            return updatePlayerList(msg.names);
         }
-        break;
-    }
-    case "win": {
-        // somebody won a game we're subscribed to
-        if (msg.player === player) {
-            window.alert("Congratulations, you won!");
-        } else {
+        case "create": {
+            // creation success
+            console.log("Created game");
+            game = msg.game;
+            // immediately join created game
+            return socket.send(makeJoin(game));
+        }
+        case "list": {
+            // server sent list of games for us to update our selection list
+            console.log("Listing available games");
+            updateGameSelection(msg.list);
+            break;
+        }
+        case "join": {
+            // server sent game connection information (required for future interaction)
+            console.log("Joined game");
+            player = msg.player;
+            game = msg.game;
+            gridNum = msg.size;
+            recalculateGrid(gridNum);
+            break;
+        }
+        case "state": {
+            // get latest state of the game
+            updateGameState(msg.state);
+            break;
+        }
+        case "getMove": {
+            // display moves from players (including self)
+            if (msg.validMove) {
+                console.log(`Move made by ${msg.player}`);
+                placePiece(msg.player, msg.location);
+            }
+            break;
+        }
+        case "win": {
+            // somebody won a game we're subscribed to
+            if (msg.player === player) {
+                window.alert("Congratulations, you won!");
+            } else {
+                window.alert(msg.message);
+            }
+            break;
+        }
+        case "error": {
             window.alert(msg.message);
+            break;
         }
-        break;
-    }
-    case "error": {
-        window.alert(msg.message);
-        break;
-    }
-    default:
-        console.log("Unknown message type: " + msg.type);
+        default:
+            console.log("Unknown message type: " + msg.type);
     }
 };
 

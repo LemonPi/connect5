@@ -25,19 +25,21 @@ function handleConnect(send, ws, msg) {
         // AI doesn't need to know other games
         send(m.makeList());
         // update player list for everyone
-        wss.clients.forEach((client)=> {
+        wss.clients.forEach((client) => {
             client.send(m.makeConnect());
         });
     }
 }
+
 function handleDisconnect(ws) {
     unsubscribe(ws);
     removeName(ws);
-    wss.clients.forEach((client)=> {
+    wss.clients.forEach((client) => {
         client.send(m.makeConnect());
         client.send(m.makeList());
     });
 }
+
 function handleCreate(ws, msg) {
     console.log("trying to create");
     // create new game
@@ -47,7 +49,7 @@ function handleCreate(ws, msg) {
         ws.send(m.makeCreate(getCounter()));
     }
     // list game: broadcast to all
-    wss.clients.forEach((client)=> {
+    wss.clients.forEach((client) => {
         client.send(m.makeList());
         // tell all AI agents about new AI game if necessary
         if (msg.ai && client.ai) {
@@ -55,6 +57,7 @@ function handleCreate(ws, msg) {
         }
     });
 }
+
 function handleMove(sendError, msg) {
     console.log("trying to move");
     console.log(msg.location);
@@ -67,17 +70,18 @@ function handleMove(sendError, msg) {
     }
     const validMove = games[gameID].move(msg.player, msg.name, msg.location);
     // send to all who are subscribed to this game
-    subscription[gameID].forEach((client)=> {
+    subscription[gameID].forEach((client) => {
         client.send(m.makeMove(validMove, msg.player, msg.location));
     });
     if (games[gameID].isGameOver()) {
         const winStatus = m.makeWin(games[gameID].getWinStatus());
-        subscription[gameID].forEach((client)=> {
+        subscription[gameID].forEach((client) => {
             client.send(winStatus);
         });
     }
     return validMove;
 }
+
 function handleJoin(send, ws, msg) {
     console.log("trying to join");
     console.log(msg.game);
@@ -103,13 +107,15 @@ function handleJoin(send, ws, msg) {
         player,
     }));
     // update everyone who's subscribed to this game that something happened
-    subscription[gameID].forEach((client)=> {
+    subscription[gameID].forEach((client) => {
         client.send(m.makeState(games[gameID]));
     });
 }
+
 function handleLeave(ws) {
     unsubscribe(ws);
 }
+
 function handleState(send, msg) {
     console.log("trying to get state for game");
     console.log(msg.game);
@@ -119,6 +125,7 @@ function handleState(send, msg) {
     }
     return send(m.makeState(games[gameID]));
 }
+
 function handleBoard(send, msg) {
     console.log("trying to get board for game");
     const gameID = msg.game;
@@ -136,43 +143,45 @@ function startWebSocketServer(wsPath, server) {
     });
 
     console.log("WebSocket server opened");
-    wss.on("connection", (ws)=> {
+    wss.on("connection", (ws) => {
         // attach uid to it for easy hashing
         ws.uid = getUniqueID();
-        ws.on("close", (code, reason)=> {
+        ws.on("close", (code, reason) => {
             console.log("client closed: %s %s", code, reason);
             handleDisconnect(ws);
         });
 
-        ws.on("message", (message)=> {
+        ws.on("message", (message) => {
             const msg = JSON.parse(message);
             console.log("message");
             console.log(msg);
             switch (msg.type) {
-            case "connect": {
-                return handleConnect(ws.send.bind(ws), ws, msg);
-            }
-            case "create": {
-                return handleCreate(ws, msg);
-            }
-            case "move": {
-                return handleMove(ws.send.bind(ws), msg);
-            }
-            case "join": {
-                return handleJoin(ws.send.bind(ws), ws, msg);
-            }
-            case "leave": {
-                return handleLeave(ws);
-            }
-            case "state": {
-                return handleState(ws.send.bind(ws), msg);
-            }
-            case "board": {
-                return handleBoard(ws.send.bind(ws), msg);
-            }
-            default:
-                console.error(`Unrecognized message type ${msg.type}`);
-                break;
+                case "connect": {
+                    return handleConnect(ws.send.bind(ws), ws, msg);
+                }
+                case "create": {
+                    return handleCreate(ws, msg);
+                }
+                case "move": {
+                    return handleMove(ws.send.bind(ws), msg);
+                }
+                case "join": {
+                    return handleJoin(ws.send.bind(ws), ws, msg);
+                }
+                case "leave": {
+                    return handleLeave(ws);
+                }
+                case "state": {
+                    return handleState(ws.send.bind(ws), msg);
+                }
+                case "board": {
+                    return handleBoard(ws.send.bind(ws), msg);
+                }
+                case "keep alive":
+                    break;
+                default:
+                    console.error(`Unrecognized message type ${msg.type}`);
+                    break;
             }
         });
     });
