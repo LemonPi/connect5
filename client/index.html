@@ -23,6 +23,12 @@
     <link rel="stylesheet" type="text/css" href="main.css">
 </head>
 <body>
+<div id="connection_modal">
+    <div id="connect_group">
+        <label>name <input type="text" id="name"></label>
+        <a href="#" id="connect" class="myButton">Connect</a>
+    </div>
+</div>
 <div id="main_divisor">
     <div id="game">
         <canvas id="board" width=800 height=800></canvas>
@@ -37,10 +43,6 @@
         </div>
         <select multiple id="game_select">
         </select>
-        <div id="connect_group">
-            <label>name <input type="text" id="name"></label>
-        </div>
-        <a href="#" id="connect" class="myButton">Connect</a>
         <fieldset id="create_group">
             <legend>Creation options</legend>
             <label><input type="checkbox" id="allow_ai">play against AI</label><br>

@@ -1,6 +1,8 @@
 #main_divisor {
     display: flex;
     flex-direction: row;
+    justify-content: center;
+    padding: 10px;
 }
 
 #side_divisor {
@@ -21,11 +23,9 @@
 
 #side_divisor {
     text-align: center;
+    max-width: 200px;
 }
 
-#game_status {
-    font-family: Roboto;
-}
 
 #p1, #p2 {
     width: 100%;
@@ -35,7 +35,6 @@
 .player_status {
     display: flex;
     padding: 4px;
-    font-family: consolas;
 }
 
 .player_status > img {
@@ -50,10 +49,13 @@
 
 #game_select {
     height: 100px;
+    margin: 5px;
 }
 
-#connect {
-    margin-top: 6px;
+#game_status {
+    padding: 10px 0;
+    margin-bottom: 5px;
+    border: 2px brown solid;
 }
 
 #create_group, #join, #create {
@@ -70,7 +72,18 @@
     flex-direction: column;
     list-style-type: none;
     text-align: left;
+    padding:0;
+    margin:0;
 }
+
+#player_list > li {
+    background: #bbbbbb;
+    padding: 5px;
+}
+#player_list > li:nth-child(odd) {
+    background: #ffffff;
+}
+
 
 #own_name {
     font-weight: bold;
@@ -85,7 +98,6 @@
     display: inline-block;
     cursor: pointer;
     color: #ffffff;
-    font-family: Arial;
     font-size: 14px;
     padding: 8px 14px;
     text-decoration: none;
@@ -100,10 +112,37 @@
     top: 1px;
 }
 
+body {
+    margin: 0;
+}
+
 html {
-    font-family: roboto;
+    font-family: monospace;
 }
 
 fieldset {
     border: none;
+}
+
+#connection_modal {
+    width:100%;
+    height:100%;
+    background: hsla(0,0%,10%,0.5);
+    position: absolute;
+    z-index:100;
+}
+
+#connect_group {
+    position: fixed; /* or absolute */
+    top: 30%;
+    left: 40%;
+    width: 400px;
+    height: 200px;
+    background: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#connect {
+    margin: 10px;
 }

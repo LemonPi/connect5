@@ -188,7 +188,7 @@ gameSelect.addEventListener("change", ()=> {
 });
 
 const connectButton = document.getElementById("connect");
-const connectGroup = document.getElementById("connect_group");
+const connectModal = document.getElementById("connection_modal");
 connectButton.addEventListener("click", ()=> {
     const nameInput = document.getElementById("name");
     // name is either given or randomly generated (8 characters long)
@@ -198,8 +198,7 @@ connectButton.addEventListener("click", ()=> {
     joinButton.style.visibility = "visible";
     createButton.style.visibility = "visible";
     createGroup.style.visibility = "visible";
-    connectGroup.style.display = "none";
-    connectButton.style.display = "none";
+    connectModal.style.display = "none";
 });
 
 function updateGameSelection(list) {
@@ -262,8 +261,8 @@ function updatePlayerList(list) {
 
 const gameStatus = document.getElementById("game_status");
 function updateGameState(state) {
-    playerOne.innerHTML = state.players[0] || "none";
-    playerTwo.innerHTML = state.players[1] || "none";
+    playerOne.innerHTML = state.players[0] || "";
+    playerTwo.innerHTML = state.players[1] || "";
     updatePlayerTurn(state.turn);
     gameStatus.innerHTML = state.status;
 }
