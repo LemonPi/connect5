@@ -35,6 +35,7 @@ function handleDisconnect(ws) {
     removeName(ws);
     wss.clients.forEach((client)=> {
         client.send(m.makeConnect());
+        client.send(m.makeList());
     });
 }
 function handleCreate(ws, msg) {

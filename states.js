@@ -12,24 +12,35 @@ function newGame(data) {
 function getCounter() {
     return counter;
 }
-// gameID -> [clients subscribing to this game]
+// gameID -> [clients subscribing to this game], index 0 and 1 represent the 2 players
 const subscription = {};
 function subscribe(game, client) {
     // game already has client joined
     if (!subscription[game]) {
-        subscription[game] = new Set();
+        subscription[game] = [];
     }
-    subscription[game].add(client);
+    subscription[game].push(client);
 }
 function unsubscribe(client) {
+    const gamesToRemove = [];
     for (let game in subscription) {
         if (subscription.hasOwnProperty(game)) {
-            if (subscription[game].has(client)) {
-                subscription[game].delete(client);
-                return;
+            const subscriptionId = subscription[game].indexOf(client);
+            if (subscriptionId < 0) {
+                continue;
+            } else if (subscriptionId === 0 || subscriptionId === 1) {
+                gamesToRemove.push(game);
+            } else {
+                // just remove this subscriber
+                subscription[game].splice(subscriptionId, 1);
             }
         }
     }
+    console.log(`removing games ${gamesToRemove}`);
+    gamesToRemove.forEach((gameId) => {
+        delete games[gameId];
+        delete subscription[gameId];
+    });
 }
 
 const names = {};
