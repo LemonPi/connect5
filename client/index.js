@@ -24,6 +24,7 @@ let name = null;
 let game = null;
 
 const placePieceAudio = new Audio('static/place_piece.wav');
+const winAudio = new Audio('static/win.wav');
 
 
 function recalculateGrid(gridNumber) {
@@ -381,6 +382,7 @@ socket.onmessage = (event) => {
         case "win": {
             // somebody won a game we're subscribed to
             if (msg.player === player) {
+                winAudio.play();
                 window.alert("Congratulations, you won!");
             } else {
                 window.alert(msg.message);
