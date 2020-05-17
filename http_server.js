@@ -19,6 +19,7 @@ const mimeTypes = {
     "svg" : "image/svg+xml",
     "json": "application/json",
     "wav" : "audio/wav",
+    "mp3" : "audio/mpeg",
 };
 
 function handleHTTPAPI(res, action, q) {

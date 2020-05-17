@@ -24,7 +24,7 @@ let name = null;
 let game = null;
 
 const placePieceAudio = new Audio('static/place_piece.wav');
-const winAudio = new Audio('static/win.wav');
+const winAudio = new Audio('static/win.mp3');
 
 
 function recalculateGrid(gridNumber) {
