@@ -16,8 +16,10 @@
     height: 820px;
 }
 
-#board, #move_indicator {
+#game>canvas {
     position: absolute;
+}
+#board, #move_indicator {
     border: 2px solid black;
 }
 

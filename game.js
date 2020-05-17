@@ -18,6 +18,7 @@ const REQ_CONNECT = 5;
 function nextPlayer(player) {
     return 3 - player;
 }
+
 function prevPlayer(player) {
     return 3 - player;
 }
@@ -175,7 +176,7 @@ module.exports = class Game {
             console.log(`game: given name ${name} does not match ${this.players[player - 1]}`);
             return false;
         }
-        const {r, c} =location;
+        const {r, c} = location;
         // something there
         if (this.board[r][c] !== 0) {
             console.log("game: there's something there");

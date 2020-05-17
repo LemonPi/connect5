@@ -82,6 +82,22 @@ function handleMove(sendError, msg) {
     return validMove;
 }
 
+function handlePoint(sendError, msg) {
+    console.log("trying to point");
+    console.log(msg.location);
+    const gameID = msg.game;
+    if (!games[gameID]) {
+        return sendError(m.makeError(`Game ${gameID} not created yet`));
+    }
+    if (!has(msg, "player") || !has(msg, "name") || !has(msg, "location")) {
+        return sendError(m.makeError(`Point missing player, name, or location`));
+    }
+    // send to all who are subscribed to this game
+    subscription[gameID].forEach((client) => {
+        client.send(m.makePoint(msg.player, msg.location));
+    });
+}
+
 function handleJoin(send, ws, msg) {
     console.log("trying to join");
     console.log(msg.game);
@@ -164,6 +180,9 @@ function startWebSocketServer(wsPath, server) {
                 }
                 case "move": {
                     return handleMove(ws.send.bind(ws), msg);
+                }
+                case "point": {
+                    return handlePoint(ws.send.bind(ws), msg);
                 }
                 case "join": {
                     return handleJoin(ws.send.bind(ws), ws, msg);

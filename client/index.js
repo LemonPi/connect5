@@ -13,6 +13,8 @@ const board = document.getElementById("board");
 const ctx = board.getContext("2d");
 const moveIndicator = document.getElementById("move_indicator");
 const moveCtx = moveIndicator.getContext("2d");
+const p1PointerCtx = document.getElementById("p1_indicator").getContext("2d");
+const p2PointerCtx = document.getElementById("p2_indicator").getContext("2d");
 
 let gridNum = 19;
 let gridSize = board.width / gridNum;
@@ -117,6 +119,29 @@ function placePiece(player, {r, c}) {
     moveCtx.stroke();
 }
 
+function placePoint(player, {r, c}) {
+    let thisCtx;
+    // board piece
+    if (player === 2) {
+        thisCtx = p2PointerCtx;
+        thisCtx.strokeStyle = "blue";
+    } else if (player === 1) {
+        thisCtx = p1PointerCtx;
+        thisCtx.strokeStyle = "green";
+    }
+    const {x, y} = getXY(r, c);
+    // place indicator
+    const indicatorSize = gridSize * 0.1;
+    thisCtx.clearRect(0, 0, board.width, board.height);
+    thisCtx.lineWidth = 2;
+    thisCtx.beginPath();
+    thisCtx.moveTo(x, y - indicatorSize);
+    thisCtx.lineTo(x, y + indicatorSize);
+    thisCtx.moveTo(x - indicatorSize, y);
+    thisCtx.lineTo(x + indicatorSize, y);
+    thisCtx.stroke();
+}
+
 // attach to topmost
 moveIndicator.addEventListener("mousedown", function (e) {
     e.preventDefault();
@@ -133,15 +158,28 @@ moveIndicator.addEventListener("mousedown", function (e) {
     y -= board.offsetTop;
 
     const coord = getRowCol(x, y);
-    console.log(coord);
-    socket.send(JSON.stringify({
-        type    : "move",
-        location: coord,
-        game,
-        player,
-        name
-    }));
+    // depending on left or right click send different events
+    if (e.button === 2) {
+        socket.send(JSON.stringify({
+            type    : "point",
+            location: coord,
+            game,
+            player,
+            name
+        }));
+    } else if (e.button === 0) {
+        socket.send(JSON.stringify({
+            type    : "move",
+            location: coord,
+            game,
+            player,
+            name
+        }));
+    }
     return false;
+});
+document.addEventListener("contextmenu", function (e) {
+    e.preventDefault();
 });
 
 
@@ -329,6 +367,10 @@ socket.onmessage = (event) => {
                 console.log(`Move made by ${msg.player}`);
                 placePiece(msg.player, msg.location);
             }
+            break;
+        }
+        case "point": {
+            placePoint(msg.player, msg.location);
             break;
         }
         case "win": {

@@ -17,6 +17,13 @@ module.exports = {
             location
         });
     },
+    makePoint(player, location) {
+        return JSON.stringify({
+            type: "point",
+            player,
+            location
+        });
+    },
     makeConnect() {
         return JSON.stringify({
             type : "connect",
