@@ -23,6 +23,9 @@ let player = null;
 let name = null;
 let game = null;
 
+const placePieceAudio = new Audio('static/place_piece.wav');
+
+
 function recalculateGrid(gridNumber) {
     gridNum = gridNumber;
     gridSize = board.width / gridNum;
@@ -117,6 +120,8 @@ function placePiece(player, {r, c}) {
     moveCtx.moveTo(x - indicatorSize, y);
     moveCtx.lineTo(x + indicatorSize, y);
     moveCtx.stroke();
+
+    placePieceAudio.play();
 }
 
 function placePoint(player, {r, c}) {
